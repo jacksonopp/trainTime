@@ -30,6 +30,7 @@
         <!-- momentJS -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.js" integrity="sha256-H9jAz//QLkDOy/nzE9G4aYijQtkLt9FvGmdUTwBk6gs=" crossorigin="anonymous"></script>
 
+        <link rel="stylesheet" href="./assets/css/style.css">
    </head>
    <body>
         <div class="container">
@@ -49,17 +50,17 @@
         <!-- table -->
         <div class="row">
             <div class="col-12">
-                <div class="card mb-3" style="width: 100%;">
+                <div class="card text-white bg-dark mb-3" style="width: 100%;">
                     <h5 class="card-header">Train Connection's</h5>
                     <div class="card-body">
-                        <table class="table" id="train-table">
+                        <table class="table text-white" id="train-table">
                             <thead>
                                 <tr>
                                     <th scope="col">Train Name</th>
                                     <th scope="col">Destination</th>
                                     <th scope="col">Frequency (min)</th>
-                                    <th scope="col">Next Arrival</th>
                                     <th scope="col">Minutes Away</th>
+                                    <th scope="col">Next Arrival</th>
                                 </tr>
                             </thead>
                             <tbody id="train-table-body">
@@ -73,7 +74,7 @@
         <!-- input form  -->
         <div class="row">
             <div class="col-12">
-                <div class="card">
+                <div class="card text-white bg-dark mb-3">
                     <h5 class="card-header">Add Train</h5>
                     <div class="card-body">
                         <form>
@@ -94,7 +95,7 @@
                                 <input type="time" class="form-control" id="first-train-time">
                             </div>
                             <span class="text-right">
-                                <button type="button" class="btn btn-primary" id="submitButton">Submit</button>
+                                <button type="button" class="btn btn-outline-primary" id="submitButton">Submit</button>
                             </span>
                         </form>
                     </div>
