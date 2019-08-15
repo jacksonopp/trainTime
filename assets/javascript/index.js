@@ -24,7 +24,27 @@ function handleTrainData(newTrainName, newDestination, newFrequency, newFirstTra
         setTrainData(trainData, updateTrainData);
     });
 }
+//this is where im working -----------------------------------------------------------------
+function handleTrainTimes() {
+    console.log("updating train times");
+    getTrainData(function (trainData) {
+        for (i=0;i<trainData.length;i++) {
+            let tFrequency = trainData[i].frequency;
+            let tFirstTrain = trainData[i].firstTrain;
+            let firstTrainConverted = moment(tFirstTrain, "HH:mm").subtract(1, "years");
+            let timeDiff = moment().diff(moment(firstTrainConverted), "minutes");
+            let timeApart = timeDiff % tFrequency;
+            let minutesAway = tFrequency - timeApart;
+            let nextArrivalObj = moment().add(minutesAway, "minutes");
+            let nextArrival = moment(nextArrivalObj).format("HH:mm");
 
+            trainData[i].minutesAway = minutesAway;
+            trainData[i].nextArrival = nextArrival;
+            setTrainData(trainData, renderTrainData);
+        }
+    })
+}
+//this is where im working -----------------------------------------------------------------
 //click button to add data
 function addData() {
     document.getElementById("submitButton").addEventListener("click", function(event) {
@@ -71,7 +91,7 @@ addData();
 function updateTrainData() {
     //get container where data is supposed to go
     const trainTableBody = document.getElementById("train-table-body");
-
+    trainTableBody.innerHTML = "";
     //create element for data
     const trainTR = document.createElement("tr");
     //populate element with data
@@ -89,7 +109,7 @@ function updateTrainData() {
         //populate with info
         trainNameTD.innerText = train.trainName;
         destinationTD.innerText = train.destination;
-        frequencyTD.innerText = train.freq;
+        frequencyTD.innerText = train.frequency;
         nextArrival.innerText = train.nextArrival;
         minutesAwayTD.innerText = train.minutesAway;
 
@@ -146,8 +166,8 @@ function renderTrainData() {
 
 renderTrainData();
 
-let renderUpdate = setInterval(renderTrainData, 500);
-// let timeUpdate = setInterval(updateTrainTimes, 10000);
+// let renderUpdate = setInterval(renderTrainData, 3000);
+let timeUpdate = setInterval(handleTrainTimes, 5000);
 
 function updateTrainTimes() {
     let minutesAway;
