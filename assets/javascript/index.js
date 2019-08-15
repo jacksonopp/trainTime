@@ -36,7 +36,7 @@ function handleTrainTimes() {
             let timeApart = timeDiff % tFrequency;
             let minutesAway = tFrequency - timeApart;
             let nextArrivalObj = moment().add(minutesAway, "minutes");
-            let nextArrival = moment(nextArrivalObj).format("HH:mm");
+            let nextArrival = moment(nextArrivalObj).format("HH:mm:ss");
 
             trainData[i].minutesAway = minutesAway;
             trainData[i].nextArrival = nextArrival;
@@ -60,7 +60,7 @@ function addData() {
         let timeApart = timeDiff % tFrequency;
         let minutesAway = tFrequency - timeApart;
         let nextArrivalObj = moment().add(minutesAway, "minutes");
-        let nextArrival = moment(nextArrivalObj).format("HH:mm");
+        let nextArrival = moment(nextArrivalObj).format("HH:mm:ss");
 
         
         handleTrainData(trainName, destination, frequency, firstTrainTime, nextArrival, minutesAway);
@@ -150,7 +150,7 @@ function renderTrainData() {
 renderTrainData();
 
 // let renderUpdate = setInterval(renderTrainData, 3000);
-let timeUpdate = setInterval(handleTrainTimes, 5000);
+let timeUpdate = setInterval(handleTrainTimes, 1000);
 
 function updateTrainTimes() {
     let minutesAway;
@@ -169,7 +169,7 @@ function updateTrainTimes() {
             let minutesAway = frequency - timeApart;
             console.log("MINUTES TILL TRAIN: " + minutesAway);
             let nextArrival = moment().add(minutesAway, "minutes");
-            console.log("ARRIVAL TIME: " + moment(nextArrival).format("hh:mm"));
+            console.log("ARRIVAL TIME: " + moment(nextArrival).format("HH:mm:ss"));
 
             return minutesAway;
         }
