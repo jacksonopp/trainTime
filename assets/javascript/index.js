@@ -21,7 +21,7 @@ function handleTrainData(newTrainName, newDestination, newFrequency, newFirstTra
             minutesAway: newMinutesAway
         });
         console.log(trainData);
-        setTrainData(trainData, updateTrainData);
+        setTrainData(trainData, renderTrainData);
     });
 }
 //this is where im working -----------------------------------------------------------------
@@ -53,32 +53,15 @@ function addData() {
         const frequency = document.getElementById("frequency").value;
         const firstTrainTime = document.getElementById("first-train-time").value;
         
-        function nextArrivalFunc() {
-            let tFrequency = frequency;
-            let tFirstTrain = firstTrainTime;
-            let firstTrainConverted = moment(tFirstTrain, "HH:mm").subtract(1, "years");
-            let timeDiff = moment().diff(moment(firstTrainConverted), "minutes");
-            let timeApart = timeDiff % tFrequency;
-            let minutesAway = tFrequency - timeApart;
-            return minutesAway;
-        };
-        
-        const nextArrival = nextArrivalFunc();
+        let tFrequency = frequency;
+        let tFirstTrain = firstTrainTime;
+        let firstTrainConverted = moment(tFirstTrain, "HH:mm").subtract(1, "years");
+        let timeDiff = moment().diff(moment(firstTrainConverted), "minutes");
+        let timeApart = timeDiff % tFrequency;
+        let minutesAway = tFrequency - timeApart;
+        let nextArrivalObj = moment().add(minutesAway, "minutes");
+        let nextArrival = moment(nextArrivalObj).format("HH:mm");
 
-        function minutesAwayFunc() {
-            let tFrequency = frequency;
-            let tFirstTrain = firstTrainTime;
-            let firstTrainConverted = moment(tFirstTrain, "HH:mm").subtract(1, "years");
-            let timeDiff = moment().diff(moment(firstTrainConverted), "minutes");
-            let timeApart = timeDiff % tFrequency;
-            let minutesAway = tFrequency - timeApart;
-            let nextArrivalObj = moment().add(minutesAway, "minutes");
-            let nextArrival = moment(nextArrivalObj).format("HH:mm");
-            return nextArrival;
-        }
-
-        minutesAwayFunc();
-        const minutesAway = minutesAwayFunc();
         
         handleTrainData(trainName, destination, frequency, firstTrainTime, nextArrival, minutesAway);
         console.log("addData trigger");
@@ -88,44 +71,44 @@ function addData() {
 addData();
 
 
-function updateTrainData() {
-    //get container where data is supposed to go
-    const trainTableBody = document.getElementById("train-table-body");
-    trainTableBody.innerHTML = "";
-    //create element for data
-    const trainTR = document.createElement("tr");
-    //populate element with data
-    getTrainData(function(trainData) {
-        //do stuff
-        const trainNameTD = document.createElement("td");
-        const destinationTD = document.createElement("td");
-        const frequencyTD = document.createElement("td");
-        const nextArrival = document.createElement("td");
-        const minutesAwayTD = document.createElement("td");
+// function updateTrainData() {
+//     //get container where data is supposed to go
+//     const trainTableBody = document.getElementById("train-table-body");
+//     trainTableBody.innerHTML = "";
+//     //create element for data
+//     const trainTR = document.createElement("tr");
+//     //populate element with data
+//     getTrainData(function(trainData) {
+//         //do stuff
+//         const trainNameTD = document.createElement("td");
+//         const destinationTD = document.createElement("td");
+//         const frequencyTD = document.createElement("td");
+//         const nextArrival = document.createElement("td");
+//         const minutesAwayTD = document.createElement("td");
 
-        //get new train data
-        let train = trainData[trainData.length - 1];
+//         //get new train data
+//         let train = trainData[trainData.length - 1];
         
-        //populate with info
-        trainNameTD.innerText = train.trainName;
-        destinationTD.innerText = train.destination;
-        frequencyTD.innerText = train.frequency;
-        nextArrival.innerText = train.nextArrival;
-        minutesAwayTD.innerText = train.minutesAway;
+//         //populate with info
+//         trainNameTD.innerText = train.trainName;
+//         destinationTD.innerText = train.destination;
+//         frequencyTD.innerText = train.frequency;
+//         nextArrival.innerText = train.nextArrival;
+//         minutesAwayTD.innerText = train.minutesAway;
 
-        //append td to tr
-        trainTR.append(trainNameTD);
-        trainTR.append(destinationTD);
-        trainTR.append(frequencyTD);
-        trainTR.append(nextArrival);
-        trainTR.append(minutesAwayTD);
+//         //append td to tr
+//         trainTR.append(trainNameTD);
+//         trainTR.append(destinationTD);
+//         trainTR.append(frequencyTD);
+//         trainTR.append(nextArrival);
+//         trainTR.append(minutesAwayTD);
 
-        // append tr to table body
-        trainTableBody.append(trainTR);
-    })
+//         // append tr to table body
+//         trainTableBody.append(trainTR);
+//     })
 
-    //append element ot container
-}
+//     //append element ot container
+// }
 
 function renderTrainData() {
     // console.log("timer test")
@@ -155,8 +138,8 @@ function renderTrainData() {
             trainTR.append(trainNameTD);
             trainTR.append(destinationTD);
             trainTR.append(frequencyTD);
-            trainTR.append(nextArrivalTD);
             trainTR.append(minutesAwayTD);
+            trainTR.append(nextArrivalTD);
 
             // append tr to table body
             trainTableBody.append(trainTR);
