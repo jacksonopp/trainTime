@@ -8,35 +8,65 @@ function setTrainData(newTrainData, cb) {
     localforage.setItem("train-data", newTrainData).then(cb);
 }
 
-function handleTrainData(newTrainName, newDestination, newFrequency, newFirstTrain) {
+function handleTrainData(newTrainName, newDestination, newFrequency, newFirstTrain, newNextArrival, newMinutesAway) {
+    
     getTrainData(function (trainData) {
+                
         trainData.push({
             trainName: newTrainName,
             destination: newDestination,
             frequency: newFrequency,
-            newFirstTrain: newFirstTrain
+            firstTrain: newFirstTrain,
+            nextArrival: newNextArrival,
+            minutesAway: newMinutesAway
         });
         console.log(trainData);
         setTrainData(trainData, updateTrainData);
     });
 }
 
+//click button to add data
 function addData() {
     document.getElementById("submitButton").addEventListener("click", function(event) {
         const trainName = document.getElementById("train-name").value;
         const destination = document.getElementById("destination").value;
         const frequency = document.getElementById("frequency").value;
         const firstTrainTime = document.getElementById("first-train-time").value;
-        handleTrainData(trainName, destination, frequency, firstTrainTime);
+        
+        function nextArrivalFunc() {
+            let tFrequency = frequency;
+            let tFirstTrain = firstTrainTime;
+            let firstTrainConverted = moment(tFirstTrain, "HH:mm").subtract(1, "years");
+            let timeDiff = moment().diff(moment(firstTrainConverted), "minutes");
+            let timeApart = timeDiff % tFrequency;
+            let minutesAway = tFrequency - timeApart;
+            return minutesAway;
+        };
+        
+        const nextArrival = nextArrivalFunc();
+
+        function minutesAwayFunc() {
+            let tFrequency = frequency;
+            let tFirstTrain = firstTrainTime;
+            let firstTrainConverted = moment(tFirstTrain, "HH:mm").subtract(1, "years");
+            let timeDiff = moment().diff(moment(firstTrainConverted), "minutes");
+            let timeApart = timeDiff % tFrequency;
+            let minutesAway = tFrequency - timeApart;
+            let nextArrivalObj = moment().add(minutesAway, "minutes");
+            let nextArrival = moment(nextArrivalObj).format("HH:mm");
+            return nextArrival;
+        }
+
+        minutesAwayFunc();
+        const minutesAway = minutesAwayFunc();
+        
+        handleTrainData(trainName, destination, frequency, firstTrainTime, nextArrival, minutesAway);
         console.log("addData trigger");
     })
 }
 
 addData();
 
-function calculations(){
-    
-}
 
 function updateTrainData() {
     //get container where data is supposed to go
@@ -60,8 +90,8 @@ function updateTrainData() {
         trainNameTD.innerText = train.trainName;
         destinationTD.innerText = train.destination;
         frequencyTD.innerText = train.freq;
-        nextArrival.innerText = "some text here";
-        minutesAwayTD.innerText = "some text here";
+        nextArrival.innerText = train.nextArrival;
+        minutesAwayTD.innerText = train.minutesAway;
 
         //append td to tr
         trainTR.append(trainNameTD);
@@ -76,7 +106,6 @@ function updateTrainData() {
 
     //append element ot container
 }
-// displayHighScores();
 
 function renderTrainData() {
     // console.log("timer test")
@@ -99,8 +128,8 @@ function renderTrainData() {
             trainNameTD.innerText = train.trainName;
             destinationTD.innerText = train.destination;
             frequencyTD.innerText = train.frequency;
-            nextArrivalTD.innerText = "some text here";
-            minutesAwayTD.innerText = "some text here";
+            nextArrivalTD.innerText = train.nextArrival;
+            minutesAwayTD.innerText = train.minutesAway;
 
             //append td to tr
             trainTR.append(trainNameTD);
@@ -118,4 +147,28 @@ function renderTrainData() {
 renderTrainData();
 
 let renderUpdate = setInterval(renderTrainData, 500);
+// let timeUpdate = setInterval(updateTrainTimes, 10000);
 
+function updateTrainTimes() {
+    let minutesAway;
+
+    getTrainData(function (result) {
+        for (let i = 0; i < result.length; i++) {
+            let frequency = result[i].frequency //result[i].frequency;
+            let firstTrain = result[i].firstTrain;
+            console.log("first train: ",firstTrain);
+            let firstTrainConverted = moment(firstTrain, "HH:mm").subtract(1, "years");
+            console.log(firstTrainConverted);
+            let diffTime = moment().diff(moment(firstTrainConverted), "minutes");
+            console.log("DIFFERENCE IN TIME: " + diffTime);
+            let timeApart = diffTime % frequency;
+            console.log(timeApart);
+            let minutesAway = frequency - timeApart;
+            console.log("MINUTES TILL TRAIN: " + minutesAway);
+            let nextArrival = moment().add(minutesAway, "minutes");
+            console.log("ARRIVAL TIME: " + moment(nextArrival).format("hh:mm"));
+
+            return minutesAway;
+        }
+    })
+}
